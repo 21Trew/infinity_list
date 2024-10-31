@@ -1,8 +1,7 @@
-// src/components/RepoList.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import repoStore from "./RepoStore";
-import { Row, Col, Button, Card, Spin, Typography } from "antd";
+import { Row, Col, Button, Card, Spin, Typography, Pagination, Space } from "antd";
 import EditModal from "./modals/EditModal.tsx";
 import ViewModal from "./modals/ViewModal.tsx";
 
@@ -16,6 +15,8 @@ const RepoList: React.FC = observer(() => {
 	const [newName, setNewName] = useState('');
 	const [newDescription, setNewDescription] = useState('');
 	const [newUrl, setNewUrl] = useState('');
+	const [currentPage, setCurrentPage] = useState(1);
+	const pageSize = 20;
 	
 	useEffect(() => {
 		repoStore.fetchRepos();
@@ -67,11 +68,39 @@ const RepoList: React.FC = observer(() => {
 		repoStore.deleteRepo(id);
 	};
 	
+	const handlePageChange = (page: number) => {
+		setCurrentPage(page);
+	};
+	
+	const paginatedRepos = repoStore.repos.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+	
 	return (
 		<div style={{ padding: '20px' }}>
-			<Title level={2} style={{ color: '#6f2c91', margin: '0 0 20px' }}>GitHub Repositories</Title>
+			<Space
+				style={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					position: 'sticky',
+					top: 0,
+					backgroundColor: 'rgb(245, 240, 255)',
+					zIndex: 10,
+					width: '100%',
+					padding: '20px 0'
+				}}
+			>
+				<Title level={2} style={{ color: '#6f2c91', margin: 0 }}>GitHub Repositories</Title>
+				<Pagination
+					total={repoStore.repos.length}
+					pageSize={pageSize}
+					current={currentPage}
+					onChange={handlePageChange}
+					showSizeChanger
+					showTotal={(total) => `Всего ${total}`}
+				/>
+			</Space>
+			
 			<Row gutter={[16, 16]}>
-				{repoStore.repos.map(repo => (
+				{paginatedRepos.map(repo => (
 					<Col
 						key={repo.id}
 						xs={24}
