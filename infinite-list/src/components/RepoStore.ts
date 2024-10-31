@@ -21,7 +21,13 @@ class RepoStore {
 		this.loading = true;
 		try {
 			const response = await axios.get(`https://api.github.com/search/repositories?q=javascript&sort=stars&order=asc&page=${this.page}`);
-			this.repos = [...this.repos, ...response.data.items];
+			const newRepos = response.data.items;
+			
+			// Фильтруем дублирующиеся репозитории
+			this.repos = [
+				...this.repos,
+				...newRepos.filter(newRepo => !this.repos.some(existingRepo => existingRepo.id === newRepo.id))
+			];
 			this.page += 1;
 		} catch (error) {
 			console.error("Failed to fetch repos", error);
@@ -39,7 +45,10 @@ class RepoStore {
 	}
 	
 	deleteRepo(id: number) {
+		console.log('Deleting repo with id:', id);
+		console.log('Repos before:', this.repos.length);
 		this.repos = this.repos.filter(repo => repo.id !== id);
+		console.log('Repos after:', this.repos.length);
 	}
 }
 
