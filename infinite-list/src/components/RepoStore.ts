@@ -45,10 +45,7 @@ class RepoStore {
 	}
 	
 	deleteRepo(id: number) {
-		console.log('Deleting repo with id:', id);
-		console.log('Repos before:', this.repos.length);
 		this.repos = this.repos.filter(repo => repo.id !== id);
-		console.log('Repos after:', this.repos.length);
 	}
 }
 
