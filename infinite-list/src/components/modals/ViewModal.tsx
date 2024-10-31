@@ -16,14 +16,25 @@ const ViewModal: React.FC<ViewModalProps> = ({ visible, onCancel, selectedRepo }
 			onCancel={onCancel}
 			footer={[
 				<Button key="back" onClick={onCancel}>
-					Close
+					Закрыть
 				</Button>
 			]}
 		>
 			{selectedRepo && (
 				<div>
-					<p><strong>Description:</strong> {selectedRepo.description}</p>
-					<p><strong>URL:</strong> <a href={selectedRepo.html_url} target="_blank" rel="noopener noreferrer">{selectedRepo.html_url}</a></p>
+					<p>
+						<strong>Описание:</strong>
+						<br />
+						{selectedRepo.description}
+					</p>
+					
+					<p>
+						<strong>Ссылка:</strong>
+						<br />
+						<a href={selectedRepo.html_url} target="_blank" rel="noopener noreferrer">
+							{selectedRepo.html_url}
+						</a>
+					</p>
 				</div>
 			)}
 		</Modal>
